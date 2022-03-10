@@ -1,6 +1,15 @@
 import Link from 'next/link';
+import Cookie from 'js-cookie';
+import Router from 'next/router';
 
 export default function Sidebar(props) {
+    function logoutHandler(e) {
+        e.preventDefault();
+
+        Cookie.remove('token');
+
+        Router.replace('/dashboard/auth/login');
+    }
     return (
         <div className="flex">
             <div className="flex flex-col w-64 h-screen px-4 py-8 overflow-y-auto border-r">
@@ -33,10 +42,15 @@ export default function Sidebar(props) {
                                     </a>
                                 </Link>
                             </li>
+                            <li>
+                                <Link href='#'>
+                                    <a className="flex items-center px-4 py-2 mt-5 text-gray-600 rounded-md hover:bg-gray-200" onClick={logoutHandler.bind(this)}>
+                                        <span className="mx-4 font-medium">Logout</span>
+                                    </a>
+                                </Link>
+                            </li>
                         </ul>
-
                     </aside>
-          
                 </div>
             </div>
             <div className="w-full h-full p-4 m-8 overflow-y-auto">

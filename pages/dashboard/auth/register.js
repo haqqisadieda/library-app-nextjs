@@ -6,7 +6,7 @@ import { useState } from 'react';
 export async function getServerSideProps(ctx) {
     const dataReq = await fetch('http://localhost:3000/api/admin/data');
 
-    const data = dataReq.json();
+    const data = await dataReq.json();
 
     return {
         props: data
@@ -55,7 +55,7 @@ export default function Register(props) {
     
             const registerRes = await registerReq.json();
 
-            if(registerRes) alert('Successfully Registered');
+            if(registerReq.ok) alert('Successfully Registered');
 
             Router.push('/dashboard/auth/login');
         }

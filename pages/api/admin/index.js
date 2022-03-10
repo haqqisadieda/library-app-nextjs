@@ -13,6 +13,5 @@ export default async function handler(req, res) {
         message: 'Data books',
         data
     });
-    res.status(401).end();
     
 }

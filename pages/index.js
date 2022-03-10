@@ -4,7 +4,7 @@ import Cards from '@/components/items/cards';
 export async function getServerSideProps(ctx) {
     const dataReq = await fetch('http://localhost:3000/api/user');
 
-    const data = dataReq.json();
+    const data = await dataReq.json();
 
     return {
         props: data
