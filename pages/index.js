@@ -9,8 +9,6 @@ export async function getServerSideProps(ctx) {
     return {
         props: data
     };
-
-    
 }
 
 export default function Home(props) {
