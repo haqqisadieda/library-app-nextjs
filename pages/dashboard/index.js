@@ -22,6 +22,9 @@ export default function Home(props) {
             <div className='w-full h-full items-center justify-center text-center'>
                 <h1 className='text-2xl'>Hello, Admin.</h1>
                 <p>Serve summary of every data</p>
+                <p>Books: { props.data.book.length } Data</p>
+                <p>Authors: { props.data.author.length } Data</p>
+                <p>Categories: { props.data.category.length } Data</p>
             </div>
         </Layout>
     );

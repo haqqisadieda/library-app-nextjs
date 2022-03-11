@@ -6,12 +6,18 @@ export default async function handler(req, res) {
 
     const auth = await authorization(req, res);
     
-    const data = await db('books');
+    const dataBooks = await db('books');
+    const dataAuthors = await db('authors');
+    const dataCategories = await db('categories');
     
     res.status(200);
     res.json({
         message: 'Data books',
-        data
+        data: {
+            book: dataBooks,
+            author: dataAuthors,
+            category: dataCategories,
+        }
     });
     
 }
