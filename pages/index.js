@@ -1,5 +1,5 @@
 import Layout from '@/components/user/Layout';
-import Cards from '@/components/items/cards';
+import Cards from '@/components/items/Cards';
 
 export async function getServerSideProps(ctx) {
     const dataReq = await fetch('http://localhost:3000/api/user');
