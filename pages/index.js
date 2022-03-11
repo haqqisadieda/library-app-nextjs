@@ -38,7 +38,7 @@ export default function Home(props) {
                                         author={ data.authorName.concat(' ' + data.authorSurname) } 
                                         category={ data.category } 
                                         synopsis={ data.synopsis.slice(0,150).concat('.....') } 
-                                        image={ data.image_path }
+                                        image= { '/upload/' + (data.image_path) }
                                     />
                                 );
                             }) }

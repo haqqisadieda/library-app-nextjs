@@ -12,7 +12,7 @@ export default async function handler(req, res) {
     
     res.status(200);
     res.json({
-        message: 'Data books',
+        message: 'Data',
         data: {
             book: dataBooks,
             author: dataAuthors,

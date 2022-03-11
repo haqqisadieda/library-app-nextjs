@@ -18,6 +18,7 @@ export async function getServerSideProps(ctx) {
 }
 
 export default function Home(props) {
+    let i = 1;
     return (
         <Layout>
             <div>
@@ -52,22 +53,20 @@ export default function Home(props) {
                                     <tbody>
                                         { props.data.map(data => {
                                             return (
-                                                <>
-                                                    <tr className='bg-white border-b'>
-                                                        <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>{ data.id }</td>
-                                                        <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>{ data.name }</td>
-                                                        <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
-                                                            <div className='space-x-3'>
-                                                                <a href='#' className='text-lg'>
+                                                <tr className='bg-white border-b' key={ data.id }>
+                                                    <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>{ i++ }</td>
+                                                    <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>{ data.name }</td>
+                                                    <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>
+                                                        <div className='space-x-3'>
+                                                            <a href='#' className='text-lg'>
                                                                     ✏️
-                                                                </a>
-                                                                <a href='#' className='text-lg'>
+                                                            </a>
+                                                            <a href='#' className='text-lg'>
                                                                      ✂️
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                </>
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
                                             );
                                         }) }
                                     </tbody>
