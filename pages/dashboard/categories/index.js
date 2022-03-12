@@ -1,10 +1,12 @@
 import cookies from 'next-cookies';
 import Layout from '@/components/admin/Layout';
 import Link from 'next/link';
+import Router from 'next/router';
+import { useState } from 'react';
 
 export async function getServerSideProps(ctx) {
     const { token } = cookies(ctx);
-    const dataReq = await fetch('http://localhost:3000/api/admin/categories', {
+    const dataReq = await fetch('http://localhost:3000/api/admin/', {
         headers: {
             'Authorization': 'Bearer ' + token,
         }
@@ -13,12 +15,41 @@ export async function getServerSideProps(ctx) {
     const data = await dataReq.json();
 
     return {
-        props: data
+        props: {
+            data,
+            token
+        },
     };
 }
 
 export default function Home(props) {
     let i = 1;
+
+    async function deleteHandler(id, name, e) {
+        e.preventDefault();
+
+        if(props.data.data.book.some(data => data.categories_id === id) === true) {
+            alert('Category data is used by some Book data, please check Book data lists!');
+        } else {
+            const ask = confirm('Are you sure to delete this data?');
+
+            if(ask) {
+                const deleteReq = await fetch('/api/admin/categories/delete/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + props.token,
+                    }
+                });
+    
+                if(deleteReq.ok) alert(`Category data with name: ${name} successfully deleted`);
+    
+                Router.push('/dashboard/categories');
+            }
+        }
+
+        
+    }
+
     return (
         <Layout>
             <div>
@@ -51,7 +82,7 @@ export default function Home(props) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        { props.data.map(data => {
+                                        { props.data.data.category.map(data => {
                                             return (
                                                 <tr className='bg-white border-b' key={ data.id }>
                                                     <td className='px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900'>{ i++ }</td>
@@ -61,7 +92,7 @@ export default function Home(props) {
                                                             <a href='#' className='text-lg'>
                                                                     ✏️
                                                             </a>
-                                                            <a href='#' className='text-lg'>
+                                                            <a href='#' onClick={ deleteHandler.bind(this, data.id, data.name) } className='text-lg'>
                                                                      ✂️
                                                             </a>
                                                         </div>

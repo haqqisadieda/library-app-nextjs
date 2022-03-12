@@ -1,7 +1,10 @@
+import authorization from '@/middlewares/authorization';
 import db from '@/utils/db';
 
 export default async function handler(req, res) {
     if(req.method !== 'DELETE') return res.status(405).end();
+
+    const auth = authorization(req, res);
   
     const { id } = req.query;
 

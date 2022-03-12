@@ -46,7 +46,7 @@ export default function Create(props) {
                 ...fields,
                 'error': 'Please fill the form to add the data!',
             });
-        }else if(props.data.data.book.some(data => data['title'] === fields.title) === true) {
+        }else if(props.data.data.book.some(data => data['title'].toLowerCase() === fields.title.toLowerCase()) === true) {
             setFields({
                 ...fields,
                 'error': 'The book is on the lists, please check the lists again!',

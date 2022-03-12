@@ -1,6 +1,7 @@
 import cookies from 'next-cookies';
 import Layout from '@/components/admin/Layout';
 import Link from 'next/link';
+import Router from 'next/router';
 
 export async function getServerSideProps(ctx) {
     const { token } = cookies(ctx);
@@ -13,12 +14,34 @@ export async function getServerSideProps(ctx) {
     const data = await dataReq.json();
 
     return {
-        props: data
+        props: {
+            data,
+            token
+        }
     };
 }
 
 export default function Home(props) {
     let i = 1;
+
+    async function deleteHandler(id, image, title, e) {
+        e.preventDefault();
+
+        const ask = confirm('Are you sure to delete this data?');
+
+        if(ask) {
+            const deleteReq = await fetch('/api/admin/books/delete/' + id + '&' + image, {
+                method: 'DELETE',
+                headers: {
+                    'Authorization': 'Bearer ' + props.token,
+                }
+            });
+
+            if(deleteReq.ok) alert(`Book data with title: ${title} successfully deleted`);
+
+            Router.push('/dashboard/books');
+        }
+    }
     return (
         <Layout>
             <div>
@@ -63,7 +86,7 @@ export default function Home(props) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        { props.data.map(data => {
+                                        { props.data.data.map(data => {
                                             return (
                                                 <tr className='bg-white border-b' key={ data.id }>
                                                     <td className='px-6 py-4 text-sm font-medium text-gray-900'>{ i++ }</td>
@@ -77,7 +100,7 @@ export default function Home(props) {
                                                             <a href='#' className='text-lg'>
                                                                     ✏️
                                                             </a>
-                                                            <a href='#' className='text-lg'>
+                                                            <a href='#' onClick={deleteHandler.bind(this, data.id, data.image_path, data.title)}  className='text-lg'>
                                                                     ✂️
                                                             </a>
                                                         </div>

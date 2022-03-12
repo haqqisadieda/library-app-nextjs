@@ -1,10 +1,11 @@
 import cookies from 'next-cookies';
 import Layout from '@/components/admin/Layout';
 import Link from 'next/link';
+import Router from 'next/router';
 
 export async function getServerSideProps(ctx) {
     const { token } = cookies(ctx);
-    const dataReq = await fetch('http://localhost:3000/api/admin/authors', {
+    const dataReq = await fetch('http://localhost:3000/api/admin/', {
         headers: {
             'Authorization': 'Bearer ' + token,
         }
@@ -13,12 +14,39 @@ export async function getServerSideProps(ctx) {
     const data = await dataReq.json();
 
     return {
-        props: data
+        props: {
+            data,
+            token
+        },
     };
 }
 
 export default function Home(props) {
     let i = 1;
+
+    async function deleteHandler(id, name, surname, e) {
+        e.preventDefault();
+
+        if(props.data.data.book.some(data => data.authors_id === id) === true) {
+            alert('Author data is used by some Book data, please check Book data lists!');
+        } else {
+            const ask = confirm('Are you sure to delete this data?');
+
+            if(ask) {
+                const deleteReq = await fetch('/api/admin/authors/delete/' + id, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': 'Bearer ' + props.token,
+                    }
+                });
+    
+                if(deleteReq.ok) alert(`Author data with name: ${name.concat(' ' + surname)} successfully deleted`);
+    
+                Router.push('/dashboard/authors');
+            }
+        }        
+    }
+
     return (
         <Layout>
             <div>
@@ -54,7 +82,7 @@ export default function Home(props) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        { props.data.map(data => {
+                                        { props.data.data.author.map(data => {
                                             return (
                                                 <tr className='bg-white border-b' key={ data.id }>
                                                     <td className='px-6 py-4 text-sm font-medium text-gray-900'>{ i++ }</td>
@@ -63,10 +91,10 @@ export default function Home(props) {
                                                     <td className='px-6 py-4 text-sm font-medium text-gray-900'>
                                                         <div className='space-x-3'>
                                                             <a href='#' className='text-lg'>
-                                                            ✏️
+                                                                ✏️
                                                             </a>
-                                                            <a href='#' className='text-lg'>
-                                                            ✂️
+                                                            <a href='#' onClick={deleteHandler.bind(this, data.id, data.name, data.surname)} className='text-lg'>
+                                                                ✂️
                                                             </a>
                                                         </div>
                                                     </td>

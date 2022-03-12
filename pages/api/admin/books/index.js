@@ -9,7 +9,7 @@ export default async function handler(req, res) {
     const data = await db('books')
         .join('authors',  'books.authors_id', 'authors.id')
         .join('categories', 'books.categories_id', 'categories.id')
-        .select('books.id', 'books.title', 'books.synopsis', 'books.page', 'authors.name as authorName', 'authors.surname as authorSurname', 'categories.name as category');
+        .select('books.id', 'books.title', 'books.synopsis', 'books.page', 'books.image_path' , 'authors.name as authorName', 'authors.surname as authorSurname', 'categories.name as category');
 
     res.status(200);
     res.json({
