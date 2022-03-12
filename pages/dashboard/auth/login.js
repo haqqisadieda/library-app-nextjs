@@ -3,29 +3,63 @@ import Link from 'next/link';
 import { useState } from 'react';
 import Cookie from 'js-cookie';
 import Router from 'next/router';
+import bcrypt from 'bcryptjs';
 
-export default function Login() {
+export async function getServerSideProps(ctx) {
+    const dataReq = await fetch('http://localhost:3000/api/admin/data');
+
+    const data = await dataReq.json();
+
+    return {
+        props: data
+    };
+}
+
+export default function Login(props) {
     const [ fields, setFields ] = useState({
         email: '',
         password: '',
+        error: ''
     });
 
     async function loginHandler(e) {
         e.preventDefault();
 
-        const loginReq = await fetch('/api/admin/auth/login', {
-            method: 'POST',
-            body: JSON.stringify(fields),
-            headers: {
-                'Content-Type': 'application/json'
+        if(fields.email === '' || fields.password === ''){
+            setFields({
+                ...fields,
+                'error': 'Please fill the form to login!',
+            });
+        }else if(!props.data.some(data => data['email'] === fields.email)) {
+            setFields({
+                ...fields,
+                'error': 'Your email is not regitered!',
+            });
+        }else if(props.data.some(data => data['email'] === fields.email)) {
+            const password = props.data.filter(data => data['email'] === fields.email);
+            const checkPassword = await bcrypt.compare(fields.password, password[0].password);
+
+            if(!checkPassword) {
+                setFields({
+                    ...fields,
+                    'error': 'Passwords don\'t match your email!.',
+                });
+            }else {
+                const loginReq = await fetch('/api/admin/auth/login', {
+                    method: 'POST',
+                    body: JSON.stringify(fields),
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+    
+                const loginRes = await loginReq.json();
+    
+                Cookie.set('token', loginRes.token);
+    
+                Router.push('/dashboard');
             }
-        });
-
-        const loginRes = await loginReq.json();
-
-        Cookie.set('token', loginRes.token);
-
-        Router.push('/dashboard');
+        }
     }
 
     function fieldsHandler(e) {
@@ -54,6 +88,7 @@ export default function Login() {
                             Password
                         </label>
                         <input onChange={fieldsHandler.bind(this)} type='password' className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-600' id='password' name='password' placeholder='****************'  />
+                        <p className='text-sm mt-1 px-2 text-red-500'>{ fields.error }</p>
                     </div>
                     <div className='flex items-center justify-between mt-5 mb-6'>
                         <div className='w-6/12'>

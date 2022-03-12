@@ -1,3 +1,4 @@
+import authorization from '@/middlewares/authorization';
 import formidable from 'formidable';
 
 let mv = require('mv');

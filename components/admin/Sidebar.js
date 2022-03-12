@@ -8,7 +8,7 @@ export default function Sidebar(props) {
 
         Cookie.remove('token');
 
-        Router.replace('/dashboard/auth/login');
+        Router.replace('/');
     }
     return (
         <div className="flex">

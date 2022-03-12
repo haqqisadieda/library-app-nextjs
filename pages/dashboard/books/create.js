@@ -14,7 +14,11 @@ export async function getServerSideProps(ctx) {
     const data = await dataReq.json();
 
     return {
-        props: data
+        props: {
+            data,
+            token 
+        },
+        
     };
 }
 
@@ -42,32 +46,35 @@ export default function Create(props) {
                 ...fields,
                 'error': 'Please fill the form to add the data!',
             });
-        }else if(props.data.book.some(data => data['title'] === fields.title) === true) {
+        }else if(props.data.data.book.some(data => data['title'] === fields.title) === true) {
             setFields({
                 ...fields,
                 'error': 'The book is on the lists, please check the lists again!',
             });
         }else {
 
-            const body = new FormData();
-            body.append('file', file, fields.image);
-
-            const uploadReq = await fetch('/api/admin/books/upload', {
-                method: 'POST',
-                body,
-            });
-
             const createReq = await fetch('/api/admin/books/create', {
                 method: 'POST',
                 body: JSON.stringify(fields),
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': 'Bearer ' + props.token,
                 }
             });
 
-            if(createReq.ok && uploadReq.ok) alert('Successfully Add Book Data');
+            if(createReq.ok) {
+                const body = new FormData();
+                body.append('file', file, fields.image);
 
-            Router.push('/dashboard/books');
+                const uploadReq = await fetch('/api/admin/books/upload', {
+                    method: 'POST',
+                    body, 
+                });
+                
+                alert('Successfully Add Book Data');
+    
+                Router.push('/dashboard/books');
+            } 
         }
     }
 
@@ -130,7 +137,7 @@ export default function Create(props) {
                                 focus:text-gray-700 focus:bg-white focus:border-black focus:outline-none' 
                             aria-label='Default select example' id='author' name='author'>
                                 <option value='0' disabled>Select your option...</option>
-                                { props.data.author.map(data => {
+                                { props.data.data.author.map(data => {
                                     return (
                                         <option key={data.id} value={data.id}>{ data.name.concat(' ' + data.surname) }</option>
                                     );
@@ -158,7 +165,7 @@ export default function Create(props) {
                                 focus:text-gray-700 focus:bg-white focus:border-black focus:outline-none' 
                             aria-label='Default select example' id='category' name='category'>
                                 <option value='0' disabled>Select your option...</option>
-                                { props.data.category.map(data => {
+                                { props.data.data.category.map(data => {
                                     return (
                                         <option key={data.id} value={data.id}>{ data.name }</option>
                                     );

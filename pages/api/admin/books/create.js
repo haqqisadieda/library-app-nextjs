@@ -1,7 +1,10 @@
+import authorization from '@/middlewares/authorization';
 import db from '@/utils/db';
 
 export default async function handler(req, res) {
     if(req.method !== 'POST') return res.status(405).end();
+
+    const auth = await authorization(req, res);
 
     const { title, page, synopsis, author, category, image } = req.body;
 
