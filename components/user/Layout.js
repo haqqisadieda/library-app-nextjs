@@ -4,9 +4,7 @@ import Sidebar from './Sidebar';
 export default function Layout(props) {
     return (
         <div>
-            <Sidebar>
-                { props.children }
-            </Sidebar>
+            <Sidebar>{props.children}</Sidebar>
         </div>
     );
 }

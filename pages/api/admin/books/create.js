@@ -2,7 +2,7 @@ import authorization from '@/middlewares/authorization';
 import db from '@/utils/db';
 
 export default async function handler(req, res) {
-    if(req.method !== 'POST') return res.status(405).end();
+    if (req.method !== 'POST') return res.status(405).end();
 
     const auth = await authorization(req, res);
 
@@ -14,7 +14,7 @@ export default async function handler(req, res) {
         synopsis,
         authors_id: author,
         categories_id: category,
-        image_path: image
+        image_path: image,
     });
 
     const createData = await db('books').where('id', createQuery).first();

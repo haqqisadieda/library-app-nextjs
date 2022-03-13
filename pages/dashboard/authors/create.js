@@ -7,8 +7,8 @@ export async function getServerSideProps(ctx) {
     const { token } = cookies(ctx);
     const dataReq = await fetch('http://localhost:3000/api/admin', {
         headers: {
-            'Authorization': 'Bearer ' + token,
-        }
+            Authorization: 'Bearer ' + token,
+        },
     });
 
     const data = await dataReq.json();
@@ -16,17 +16,16 @@ export async function getServerSideProps(ctx) {
     return {
         props: {
             data,
-            token 
+            token,
         },
-        
     };
 }
 
 export default function Create(props) {
-    const [ fields, setFields ] = useState({
+    const [fields, setFields] = useState({
         name: '',
-        surname:'',
-        error:''
+        surname: '',
+        error: '',
     });
 
     async function submitHandler(e) {
@@ -37,13 +36,13 @@ export default function Create(props) {
             body: JSON.stringify(fields),
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + props.token,
-            }
+                Authorization: 'Bearer ' + props.token,
+            },
         });
 
-        if(createReq.ok) {
+        if (createReq.ok) {
             alert('Successfully Add Author Data');
-    
+
             Router.push('/dashboard/authors');
         }
     }
@@ -61,24 +60,51 @@ export default function Create(props) {
 
     return (
         <Layout>
-            <div className='bg-white shadow-md rounded px-8 pt-6 mb-4 flex flex-col'>
-                <h1 className='text-2xl text-slate-600 font-semibold mb-5 text-center uppercase space-x-8'>Add Author Data</h1>
+            <div className="bg-white shadow-md rounded px-8 pt-6 mb-4 flex flex-col">
+                <h1 className="text-2xl text-slate-600 font-semibold mb-5 text-center uppercase space-x-8">
+                    Add Author Data
+                </h1>
                 <form onSubmit={submitHandler.bind(this)}>
-                    <div className='mb-4'>
-                        <label className='block text-gray-600 text-sm font-bold mb-2' htmlFor='name'>
+                    <div className="mb-4">
+                        <label
+                            className="block text-gray-600 text-sm font-bold mb-2"
+                            htmlFor="name"
+                        >
                             Name
                         </label>
-                        <input onChange={fieldsHandler.bind(this)} type='text' className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-600' id='name' name='name' placeholder='Name'  />
+                        <input
+                            onChange={fieldsHandler.bind(this)}
+                            type="text"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600"
+                            id="name"
+                            name="name"
+                            placeholder="Name"
+                        />
                     </div>
-                    <div className='mb-6'>
-                        <label className='block text-gray-600 text-sm font-bold mb-2' htmlFor='surname'>
+                    <div className="mb-6">
+                        <label
+                            className="block text-gray-600 text-sm font-bold mb-2"
+                            htmlFor="surname"
+                        >
                             Surname
                         </label>
-                        <input onChange={fieldsHandler.bind(this)} type='text' className='shadow appearance-none border rounded w-full py-2 px-3 text-gray-600' id='surname' name='surname' placeholder='Surname'  />
+                        <input
+                            onChange={fieldsHandler.bind(this)}
+                            type="text"
+                            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-600"
+                            id="surname"
+                            name="surname"
+                            placeholder="Surname"
+                        />
                     </div>
-                    <div className='flex items-center justify-between mt-5 mb-6'>
-                        <div className='w-6/12'>
-                            <button className='bg-slate-600 hover:bg-opacity-60 text-white font-bold py-2 px-4 rounded' type='submit'>Submit</button>
+                    <div className="flex items-center justify-between mt-5 mb-6">
+                        <div className="w-6/12">
+                            <button
+                                className="bg-slate-600 hover:bg-opacity-60 text-white font-bold py-2 px-4 rounded"
+                                type="submit"
+                            >
+                                Submit
+                            </button>
                         </div>
                     </div>
                 </form>

@@ -2,7 +2,7 @@ import authorization from '@/middlewares/authorization';
 import db from '@/utils/db';
 
 export default async function handler(req, res) {
-    if(req.method !== 'POST') return res.status(405).end();
+    if (req.method !== 'POST') return res.status(405).end();
 
     const { name, surname } = req.body;
 
@@ -18,6 +18,6 @@ export default async function handler(req, res) {
     res.status(200);
     res.json({
         message: 'Add data author successfully',
-        data: createData
+        data: createData,
     });
 }

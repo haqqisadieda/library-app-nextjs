@@ -1,7 +1,7 @@
 import db from '@/utils/db';
 
 export default async function handler(req, res) {
-    if(req.method !== 'PUT') return res.status(405).end();
+    if (req.method !== 'PUT') return res.status(405).end();
 
     const { id } = req.query;
 
@@ -9,7 +9,7 @@ export default async function handler(req, res) {
 
     const updateQuery = await db('authors').where({ id }).update({
         name,
-        surname
+        surname,
     });
 
     const updateData = await db('authors').where({ id }).first();
@@ -17,6 +17,6 @@ export default async function handler(req, res) {
     res.status(200);
     res.json({
         message: 'Update data author successfully',
-        data: updateData
+        data: updateData,
     });
 }
