@@ -11,27 +11,42 @@ export async function getServerSideProps(ctx) {
         },
     });
 
+    const { id } = ctx.query;
+
+    const detailReq = await fetch(
+        'http://localhost:3000/api/admin/books/detail/' + id,
+        {
+            headers: {
+                Authorization: 'Bearer ' + token,
+            },
+        }
+    );
+
     const data = await dataReq.json();
+
+    const detail = await detailReq.json();
 
     return {
         props: {
             books: data.data.book,
             authors: data.data.author,
             categories: data.data.category,
+            detail: detail.data,
+            id,
             token,
         },
     };
 }
 
-export default function Create(props) {
+export default function Update(props) {
     let setDefaultSelect = 0;
     const [fields, setFields] = useState({
-        title: '',
-        author: '',
-        category: '',
-        page: '',
-        synopsis: '',
-        image: '',
+        title: props.detail.title,
+        author: props.detail.authors_id,
+        category: props.detail.categories_id,
+        page: props.detail.page,
+        synopsis: props.detail.synopsis,
+        image: props.detail.image_path,
         error: '',
     });
 
@@ -54,19 +69,9 @@ export default function Create(props) {
                 ...fields,
                 error: 'Please fill the form to add the data!',
             });
-        } else if (
-            props.books.some(
-                (data) =>
-                    data['title'].toLowerCase() === fields.title.toLowerCase()
-            ) === true
-        ) {
-            setFields({
-                ...fields,
-                error: 'The book is on the lists, please check the lists again!',
-            });
         } else {
-            const createReq = await fetch('/api/admin/books/create', {
-                method: 'POST',
+            const updateReq = await fetch('/api/admin/books/update/' + props.id, {
+                method: 'PUT',
                 body: JSON.stringify(fields),
                 headers: {
                     'Content-Type': 'application/json',
@@ -74,7 +79,7 @@ export default function Create(props) {
                 },
             });
 
-            if (createReq.ok) {
+            if (updateReq.ok) {
                 const body = new FormData();
                 body.append('file', file, fields.image);
 
@@ -141,6 +146,7 @@ export default function Create(props) {
                                 id="title"
                                 name="title"
                                 placeholder="Title"
+                                defaultValue={props.detail.title}
                             />
                         </div>
                         <div className="mb-4">
@@ -152,7 +158,7 @@ export default function Create(props) {
                             </label>
                             <select
                                 onChange={fieldsHandler.bind(this)}
-                                defaultValue={setDefaultSelect}
+                                defaultValue={props.detail.authors_id}
                                 className="form-select appearance-none
                                 block
                                 w-full
@@ -195,7 +201,7 @@ export default function Create(props) {
                             </label>
                             <select
                                 onChange={fieldsHandler.bind(this)}
-                                defaultValue={setDefaultSelect}
+                                defaultValue={props.detail.categories_id}
                                 className="form-select appearance-none
                                 block
                                 w-full
@@ -236,7 +242,7 @@ export default function Create(props) {
                             </label>
                             <img
                                 className="block ml-auto mr-auto my-4"
-                                src={url}
+                                src={url? url : `/upload/${props.detail.image_path}`}
                             ></img>
                             <input
                                 onChange={imageHandler.bind(this)}
@@ -274,6 +280,7 @@ export default function Create(props) {
                                 id="page"
                                 name="page"
                                 placeholder="Page"
+                                defaultValue={props.detail.page}
                             />
                         </div>
                         <div className="mb-6">
@@ -307,6 +314,7 @@ export default function Create(props) {
                                 name="synopsis"
                                 rows="5"
                                 placeholder="Synopsis of the book..."
+                                defaultValue={props.detail.synopsis}
                             ></textarea>
                             <p className="text-sm mt-1 px-2 text-red-500">
                                 {fields.error}

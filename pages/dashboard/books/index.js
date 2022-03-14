@@ -1,6 +1,7 @@
 import cookies from 'next-cookies';
 import Layout from '@/components/admin/Layout';
 import Link from 'next/link';
+import Router from 'next/router';
 import { useState } from 'react';
 
 export async function getServerSideProps(ctx) {
@@ -53,6 +54,11 @@ export default function Home(props) {
             }
         }
     }
+
+    function updateHandler(id, image) {
+        Router.push('/dashboard/books/update/' + id + '&' + image);
+    }
+
     return (
         <Layout>
             <div>
@@ -152,6 +158,11 @@ export default function Home(props) {
                                                         <div className="space-x-2">
                                                             <a
                                                                 href="#"
+                                                                onClick={updateHandler.bind(
+                                                                    this,
+                                                                    data.id,
+                                                                    data.image_path
+                                                                )}
                                                                 className="text-lg"
                                                             >
                                                                 ✏️

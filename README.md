@@ -20,8 +20,6 @@
 
 ## Todo
 
--   Mengerjakan fungsional update
--   Membuat halaman detail buku untuk user
 -   Membuat fungsional filter category untuk user
 -   Membuat fungsional search title untuk user
 

@@ -15,7 +15,7 @@ export async function getServerSideProps(ctx) {
 
     return {
         props: {
-            data,
+            categories: data.data.category,
             token,
         },
     };
@@ -36,7 +36,7 @@ export default function Create(props) {
                 error: 'Please fill the form to add the data!',
             });
         } else if (
-            props.data.data.category.some(
+            props.category.some(
                 (data) =>
                     data['name'].toLowerCase() === fields.name.toLowerCase()
             ) === true

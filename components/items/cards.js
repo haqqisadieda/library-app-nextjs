@@ -3,7 +3,10 @@ import Link from 'next/link';
 export default function Cards(props) {
     return (
         <Link href="#">
-            <div className="flex flex-wrap w-1/3 cursor-pointer">
+            <div
+                className="flex flex-wrap w-1/3 cursor-pointer"
+                onClick={props.onClick}
+            >
                 <div className="w-full p-1">
                     <div className="flex justify-center">
                         <div className="flex flex-col rounded-lg bg-white shadow-lg">

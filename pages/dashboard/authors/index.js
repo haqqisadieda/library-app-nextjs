@@ -15,8 +15,8 @@ export async function getServerSideProps(ctx) {
 
     return {
         props: {
-            author: data.data.author,
-            book: data.data.book,
+            authors: data.data.author,
+            books: data.data.book,
             token,
         },
     };
@@ -25,7 +25,7 @@ export async function getServerSideProps(ctx) {
 export default function Home(props) {
     let i = 1;
 
-    const [authors, setAuthors] = useState(props.author);
+    const [authors, setAuthors] = useState(props.authors);
 
     async function deleteHandler(id, name, surname, e) {
         e.preventDefault();
@@ -34,7 +34,7 @@ export default function Home(props) {
             return author.id !== id && author;
         });
 
-        if (props.book.some((data) => data.authors_id === id) === true) {
+        if (props.books.some((data) => data.authors_id === id) === true) {
             alert(
                 'Author data is used by some Book data, please check Book data lists!'
             );

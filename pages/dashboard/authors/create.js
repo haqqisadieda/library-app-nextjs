@@ -15,7 +15,7 @@ export async function getServerSideProps(ctx) {
 
     return {
         props: {
-            data,
+            authors: data.data.author,
             token,
         },
     };

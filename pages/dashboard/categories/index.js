@@ -15,8 +15,8 @@ export async function getServerSideProps(ctx) {
 
     return {
         props: {
-            category: data.data.category,
-            book: data.data.book,
+            categoies: data.data.category,
+            books: data.data.book,
             token,
         },
     };
@@ -25,12 +25,12 @@ export async function getServerSideProps(ctx) {
 export default function Home(props) {
     let i = 1;
 
-    const [categories, setCategories] = useState(props.category);
+    const [categories, setCategories] = useState(props.categoies);
 
     async function deleteHandler(id, name, e) {
         e.preventDefault();
 
-        if (props.book.some((data) => data.categories_id === id) === true) {
+        if (props.books.some((data) => data.categories_id === id) === true) {
             alert(
                 'Category data is used by some Book data, please check Book data lists!'
             );
