@@ -1,7 +1,7 @@
 import cookies from 'next-cookies';
 import Layout from '@/components/admin/Layout';
 import Link from 'next/link';
-import Router from 'next/router';
+import { useState } from 'react';
 
 export async function getServerSideProps(ctx) {
     const { token } = cookies(ctx);
@@ -15,7 +15,7 @@ export async function getServerSideProps(ctx) {
 
     return {
         props: {
-            data,
+            books: data.data,
             token,
         },
     };
@@ -24,12 +24,18 @@ export async function getServerSideProps(ctx) {
 export default function Home(props) {
     let i = 1;
 
+    const [books, setBooks] = useState(props.books);
+
     async function deleteHandler(id, image, title, e) {
         e.preventDefault();
 
         const ask = confirm('Are you sure to delete this data?');
 
         if (ask) {
+            const booksFiltered = books.filter((book) => {
+                return book.id !== id && book;
+            });
+
             const deleteReq = await fetch(
                 '/api/admin/books/delete/' + id + '&' + image,
                 {
@@ -40,10 +46,11 @@ export default function Home(props) {
                 }
             );
 
-            if (deleteReq.ok)
-                alert(`Book data with title: ${title} successfully deleted`);
+            setBooks(booksFiltered);
 
-            Router.push('/dashboard/books');
+            if (deleteReq.ok) {
+                alert(`Book data with title: ${title} successfully deleted`);
+            }
         }
     }
     return (
@@ -114,7 +121,7 @@ export default function Home(props) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {props.data.data.map((data) => {
+                                        {books.map((data) => {
                                             return (
                                                 <tr
                                                     className="bg-white border-b"

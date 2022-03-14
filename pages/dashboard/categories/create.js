@@ -30,7 +30,7 @@ export default function Create(props) {
     async function submitHandler(e) {
         e.preventDefault();
 
-        if (fields.title === '') {
+        if (fields.name === '') {
             setFields({
                 ...fields,
                 error: 'Please fill the form to add the data!',

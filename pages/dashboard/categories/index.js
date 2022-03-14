@@ -1,7 +1,6 @@
 import cookies from 'next-cookies';
 import Layout from '@/components/admin/Layout';
 import Link from 'next/link';
-import Router from 'next/router';
 import { useState } from 'react';
 
 export async function getServerSideProps(ctx) {
@@ -16,7 +15,8 @@ export async function getServerSideProps(ctx) {
 
     return {
         props: {
-            data,
+            category: data.data.category,
+            book: data.data.book,
             token,
         },
     };
@@ -25,13 +25,12 @@ export async function getServerSideProps(ctx) {
 export default function Home(props) {
     let i = 1;
 
+    const [categories, setCategories] = useState(props.category);
+
     async function deleteHandler(id, name, e) {
         e.preventDefault();
 
-        if (
-            props.data.data.book.some((data) => data.categories_id === id) ===
-            true
-        ) {
+        if (props.book.some((data) => data.categories_id === id) === true) {
             alert(
                 'Category data is used by some Book data, please check Book data lists!'
             );
@@ -39,6 +38,10 @@ export default function Home(props) {
             const ask = confirm('Are you sure to delete this data?');
 
             if (ask) {
+                const categoriesFiltered = categories.filter((category) => {
+                    return category.id !== id && category;
+                });
+
                 const deleteReq = await fetch(
                     '/api/admin/categories/delete/' + id,
                     {
@@ -49,12 +52,12 @@ export default function Home(props) {
                     }
                 );
 
+                setCategories(categoriesFiltered);
+
                 if (deleteReq.ok)
                     alert(
                         `Category data with name: ${name} successfully deleted`
                     );
-
-                Router.push('/dashboard/categories');
             }
         }
     }
@@ -103,44 +106,42 @@ export default function Home(props) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {props.data.data.category.map(
-                                            (data) => {
-                                                return (
-                                                    <tr
-                                                        className="bg-white border-b"
-                                                        key={data.id}
-                                                    >
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                            {i++}
-                                                        </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                            {data.name}
-                                                        </td>
-                                                        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
-                                                            <div className="space-x-3">
-                                                                <a
-                                                                    href="#"
-                                                                    className="text-lg"
-                                                                >
-                                                                    ✏️
-                                                                </a>
-                                                                <a
-                                                                    href="#"
-                                                                    onClick={deleteHandler.bind(
-                                                                        this,
-                                                                        data.id,
-                                                                        data.name
-                                                                    )}
-                                                                    className="text-lg"
-                                                                >
-                                                                    ✂️
-                                                                </a>
-                                                            </div>
-                                                        </td>
-                                                    </tr>
-                                                );
-                                            }
-                                        )}
+                                        {categories.map((data) => {
+                                            return (
+                                                <tr
+                                                    className="bg-white border-b"
+                                                    key={data.id}
+                                                >
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                        {i++}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                        {data.name}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                                                        <div className="space-x-3">
+                                                            <a
+                                                                href="#"
+                                                                className="text-lg"
+                                                            >
+                                                                ✏️
+                                                            </a>
+                                                            <a
+                                                                href="#"
+                                                                onClick={deleteHandler.bind(
+                                                                    this,
+                                                                    data.id,
+                                                                    data.name
+                                                                )}
+                                                                className="text-lg"
+                                                            >
+                                                                ✂️
+                                                            </a>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
                                     </tbody>
                                 </table>
                             </div>

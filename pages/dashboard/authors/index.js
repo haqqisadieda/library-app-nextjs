@@ -1,7 +1,7 @@
 import cookies from 'next-cookies';
 import Layout from '@/components/admin/Layout';
 import Link from 'next/link';
-import Router from 'next/router';
+import { useState } from 'react';
 
 export async function getServerSideProps(ctx) {
     const { token } = cookies(ctx);
@@ -15,7 +15,8 @@ export async function getServerSideProps(ctx) {
 
     return {
         props: {
-            data,
+            author: data.data.author,
+            book: data.data.book,
             token,
         },
     };
@@ -24,12 +25,16 @@ export async function getServerSideProps(ctx) {
 export default function Home(props) {
     let i = 1;
 
+    const [authors, setAuthors] = useState(props.author);
+
     async function deleteHandler(id, name, surname, e) {
         e.preventDefault();
 
-        if (
-            props.data.data.book.some((data) => data.authors_id === id) === true
-        ) {
+        const authorsFiltered = authors.filter((author) => {
+            return author.id !== id && author;
+        });
+
+        if (props.book.some((data) => data.authors_id === id) === true) {
             alert(
                 'Author data is used by some Book data, please check Book data lists!'
             );
@@ -47,14 +52,14 @@ export default function Home(props) {
                     }
                 );
 
+                setAuthors(authorsFiltered);
+
                 if (deleteReq.ok)
                     alert(
                         `Author data with name: ${name.concat(
                             ' ' + surname
                         )} successfully deleted`
                     );
-
-                Router.push('/dashboard/authors');
             }
         }
     }
@@ -109,7 +114,7 @@ export default function Home(props) {
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        {props.data.data.author.map((data) => {
+                                        {authors.map((data) => {
                                             return (
                                                 <tr
                                                     className="bg-white border-b"
