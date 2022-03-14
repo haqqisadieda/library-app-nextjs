@@ -18,11 +18,6 @@
 -   Book filter based on authors
 -   Search bar
 
-## Todo
+## Fitures that may be can added
 
--   Membuat fungsional filter category untuk user
--   Membuat fungsional search title untuk user
-
-## Milestones
-
--   Mengerjakan sampai fungsi delete pada halaman admin
+-   Filters
