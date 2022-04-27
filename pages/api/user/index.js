@@ -13,6 +13,7 @@ export default async function handler(req, res) {
             'books.image_path',
             'authors.name as authorName',
             'authors.surname as authorSurname',
+            'authors.fullname as authorFullname',
             'categories.name as category'
         );
 

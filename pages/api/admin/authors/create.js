@@ -11,6 +11,7 @@ export default async function handler(req, res) {
     const createQuery = await db('authors').insert({
         name,
         surname,
+        fullname: name + ' ' + surname,
     });
 
     const createData = await db('authors').where('id', createQuery).first();

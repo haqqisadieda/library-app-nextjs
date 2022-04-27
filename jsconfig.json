@@ -1,13 +1,13 @@
 {
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/components/*": ["components/*"],
-      "@/api/*": ["pages/api/*"],
-      "@/utils/*": ["utils/*"],
-      "@/middlewares/*": ["middlewares/*"],
-      "@/context/*": ["context/*"],
-      "@/public/*": ["public/*"]
+    "compilerOptions": {
+        "baseUrl": ".",
+        "paths": {
+            "@/components/*": ["components/*"],
+            "@/api/*": ["pages/api/*"],
+            "@/utils/*": ["utils/*"],
+            "@/middlewares/*": ["middlewares/*"],
+            "@/context/*": ["context/*"],
+            "@/public/*": ["public/*"]
+        }
     }
-  }
 }
