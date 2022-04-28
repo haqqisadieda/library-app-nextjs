@@ -1,7 +1,8 @@
 import Layout from '@/components/user/Layout';
 import Cards from '@/components/items/Cards';
 import Router from 'next/router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export async function getServerSideProps(ctx) {
     const dataReq = await fetch('http://localhost:3000/api/user');
@@ -100,25 +101,30 @@ export default function Home(props) {
             </section>
             <section className='overflow-hidden text-slate-600'>
                 <div className='container px-5 py-2 mx-auto'>
-                    <div className='flex flex-wrap  -m-1'>
-                        {filtered.data.map((data) => {
-                            return (
-                                <Cards
-                                    key={data.id}
-                                    title={data.title}
-                                    author={data.authorName.concat(
-                                        ' ' + data.authorSurname
-                                    )}
-                                    category={data.category}
-                                    synopsis={data.synopsis
-                                        .slice(0, 150)
-                                        .concat('.....')}
-                                    image={'/upload/' + data.image_path}
-                                    onClick={clickHandler.bind(this, data.id)}
-                                />
-                            );
-                        })}
-                    </div>
+                    <motion.div layout className='flex flex-wrap  -m-1'>
+                        <AnimatePresence>
+                            {filtered.data.map((data) => {
+                                return (
+                                    <Cards
+                                        key={data.id}
+                                        title={data.title}
+                                        author={data.authorName.concat(
+                                            ' ' + data.authorSurname
+                                        )}
+                                        category={data.category}
+                                        synopsis={data.synopsis
+                                            .slice(0, 150)
+                                            .concat('.....')}
+                                        image={'/upload/' + data.image_path}
+                                        onClick={clickHandler.bind(
+                                            this,
+                                            data.id
+                                        )}
+                                    />
+                                );
+                            })}
+                        </AnimatePresence>
+                    </motion.div>
                 </div>
             </section>
         </Layout>
