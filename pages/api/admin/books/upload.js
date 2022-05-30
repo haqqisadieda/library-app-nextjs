@@ -1,7 +1,5 @@
-import authorization from '@/middlewares/authorization';
 import formidable from 'formidable';
-
-let mv = require('mv');
+import mv from 'mv';
 
 export const config = {
     api: {
@@ -17,14 +15,20 @@ export default async function handler(req, res) {
 
         form.parse(req, (err, fields, files) => {
             if (err) return reject(err);
-            let oldPath = files.file.filepath;
-            let newPath = `./public/upload/${files.file.originalFilename}`;
-            mv(oldPath, newPath, function (err) {});
-            res.status(200);
-            res.json({
-                message: 'Upload succesfully',
-                fields,
-                files,
+            resolve(() => {
+                let oldPath = files.file.filepath;
+                let newPath = `./public/upload/${files.file.originalFilename}`;
+                mv(oldPath, newPath, function (err) {
+                    res.json({ error: err });
+                });
+
+                res.status(200);
+                res.json({
+                    message: 'Upload succesfully',
+                    fields,
+                    files,
+                    data,
+                });
             });
         });
     });
